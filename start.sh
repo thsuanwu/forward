@@ -5,12 +5,107 @@
 #               bash start.sh sherlock/singularity-jupyter /home/users/raphtown
 #               bash start.sh sherlock/singularity-jupyter /home/users/raphtown
 
-if [ ! -f params.sh ]
-then
-    echo "Need to configure params before first run, run setup.sh!"
-    exit
-fi
-. params.sh
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)
+      echo "$forward - set up port forwarding on slurm based computing resources"
+      echo "options:"
+      echo "-h, --help                show brief help"
+      echo "-r, --resource=RESOURCE       specify an action to use"
+      echo "-p, --partition=PARTITION      specify a directory to store output in"
+      echo "-m, --memory=MEM       specify an action to use"
+      echo "-t, --time=TIME      specify a directory to store output in"
+
+      exit 0
+      ;;
+    -r)
+      shift
+      if test $# -gt 0; then
+        export RESOURCE=$1
+      else
+        echo "no resource specified"
+        exit 1
+      fi
+      shift
+      ;;
+    --resource*)
+      export RESOURCE=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
+      ;;
+    -p)
+      shift
+      if test $# -gt 0; then
+        export PARTITION=$1
+      else
+        echo "no partition specified"
+        exit 1
+      fi
+      shift
+      ;;
+    --partition*)
+      export PARTITION=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
+      ;;
+    -m)
+      shift
+      if test $# -gt 0; then
+        export MEM=$1
+      else
+        echo "no memory specified"
+        exit 1
+      fi
+      shift
+      ;;
+    --memory*)
+      export MEM=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
+      ;;
+    -t)
+      shift
+      if test $# -gt 0; then
+        export TIME=$1
+      else
+        echo "no time specified"
+        exit 1
+      fi
+      shift
+      ;;
+    --time*)
+      export TIME=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
+      ;;
+    -n)
+      shift
+      if test $# -gt 0; then
+        export NAME=$1
+      else
+        echo "no time specified"
+        exit 1
+      fi
+      shift
+      ;;
+    --name*)
+      export NAME=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+echo "# resource: $RESOURCE"
+echo "# partition: $PARTITION"
+echo "# memory: $MEM"
+echo "# time: $TIME"
+echo "# name: $NAME"
+
+#if [ ! -f params.sh ]
+#then
+#    echo "Need to configure params before first run, run setup.sh!"
+#    exit
+#fi
+#. params.sh
 
 if [ "$#" -eq 0 ]
 then
@@ -25,7 +120,7 @@ then
 fi
 . helpers.sh
 
-NAME="${1:-}"
+#NAME="${1:-}"
 
 # The user could request either <resource>/<script>.sbatch or
 #                               <name>.sbatch
