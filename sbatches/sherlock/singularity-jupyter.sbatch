@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # Usage
@@ -14,49 +15,9 @@
 # 4. Or any singularity container...
 # $ bash start.sh singularity /path/to/container <args>
 
-#PORT=$1
-#NOTEBOOK_DIR=${2:-${SCRATCH}}
-#CONTAINER=${3:-/scratch/users/vsochat/share/repo2docker.simg}
-
-NOTEBOOK_DIR=${SCRATCH}
-CONTAINER=${/scratch/users/vsochat/share/repo2docker.simg}
-
-while test $# -gt 0; do
-  case "$1" in
-
-    -d)
-      shift
-      if test $# -gt 0; then
-        export NOTEBOOK_DIR =$1
-      else
-        echo "no resource specified"
-        exit 1
-      fi
-      shift
-      ;;
-    --dir*)
-      export NOTEBOOK_DIR =`echo $1 | sed -e 's/^[^=]*=//g'`
-      shift
-      ;;
-    -c)
-      shift
-      if test $# -gt 0; then
-        export CONTAINER =$1
-      else
-        echo "no partition specified"
-        exit 1
-      fi
-      shift
-      ;;
-    --container*)
-      export CONTAINER =`echo $1 | sed -e 's/^[^=]*=//g'`
-      shift
-      ;;
-  esac
-done
-
-echo "# dir: $NOTEBOOK_DIR"
-echo "# container: $CONTAINER"
+PORT=$1
+NOTEBOOK_DIR=${2:-${SCRATCH}}
+CONTAINER=${3:-/scratch/users/vsochat/share/repo2docker.simg}
 
 export SINGULARITY_CACHEDIR="${SCRATCH}/.singularity"
 echo "Container is ${CONTAINER}"
