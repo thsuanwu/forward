@@ -79,7 +79,7 @@ while test $# -gt 0; do
       if test $# -gt 0; then
         export NAME=$1
       else
-        echo "no time specified"
+        echo "no sbatch script specified"
         exit 1
       fi
       shift
@@ -100,18 +100,18 @@ echo "# memory: $MEM"
 echo "# time: $TIME"
 echo "# name: $NAME"
 
-#if [ ! -f params.sh ]
-#then
-#    echo "Need to configure params before first run, run setup.sh!"
-#    exit
-#fi
-#. params.sh
-
-if [ "$#" -eq 0 ]
+if [ ! -f params.sh ]
 then
-    echo "Need to give name of sbatch job to run!"
+    echo "Need to configure params before first run, run setup.sh!"
     exit
 fi
+. params.sh
+
+#if [ "$#" -eq 0 ]
+#then
+#    echo "Need to give name of sbatch job to run!"
+#    exit
+#fi
 
 if [ ! -f helpers.sh ]
 then
